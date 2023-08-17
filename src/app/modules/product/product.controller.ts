@@ -11,7 +11,7 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
         })
     } else {
         res.status(404).json({
-            message: "opps! something went wrong! Please check your data!"
+            message: "opps! Something went wrong! Please check your data!"
         })
     }
 }
