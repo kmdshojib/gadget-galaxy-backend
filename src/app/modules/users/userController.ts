@@ -3,26 +3,43 @@ import { createUserToDatabase } from "./userService";
 import { userModel } from "./userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { uploadImageToCloudinary } from "../../../app";
 
 export const createUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const userData = req.body;
+  const { name, email, password, role, imageUrl } = req.body;
+  // console.log({ imageUrl })
+  try {
+    // Check if an image is provided
+    let imageUrlNew: any
+    if (imageUrl) {
+      const imageBuffer = Buffer.from(imageUrl.replace(/^data:image\/\w+;base64,/, ''), 'base64');      
+      const uploadResult = await uploadImageToCloudinary(imageBuffer);
 
-  const user = await createUserToDatabase(userData);
+      if (!uploadResult) {
+        return res.status(500).json({ error: "Error uploading image" });
+      }
 
-  if (user) {
-    res.status(200).send({
-      message: "User created successfully!",
-    });
-  } else {
-    res.status(404).send({
-      message: "Opps! Something went wrong!",
-    });
+      imageUrlNew = uploadResult;
+    }
+  } catch (err) {
+    console.log(err);
   }
-};
+  // const user = await createUserToDatabase(userData);
+
+  // if (user) {
+  //   res.status(200).send({
+  //     message: "User created successfully!",
+  //   });
+  // } else {
+  //   res.status(404).send({
+  //     message: "Opps! Something went wrong!",
+  //   });
+  // }
+}
 
 export const loginUser = async (
   req: Request,
@@ -46,13 +63,14 @@ export const loginUser = async (
     const token = jwt.sign({ userId: user._id }, authToken, {
       expiresIn: "6h",
     });
+
     res.status(200).json({
       token,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.userType,
+        role: user.role,
       },
     });
   } catch (error) {
