@@ -3,43 +3,51 @@ import { createUserToDatabase } from "./userService";
 import { userModel } from "./userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { uploadImageToCloudinary } from "../../../app";
+import { UploadApiResponse, v2 as cloudinary } from 'cloudinary';
 
 export const createUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { name, email, password, role, imageUrl } = req.body;
-  // console.log({ imageUrl })
-  try {
-    // Check if an image is provided
-    let imageUrlNew: any
-    if (imageUrl) {
-      const imageBuffer = Buffer.from(imageUrl.replace(/^data:image\/\w+;base64,/, ''), 'base64');      
-      const uploadResult = await uploadImageToCloudinary(imageBuffer);
+  const userData = req.body;
 
-      if (!uploadResult) {
-        return res.status(500).json({ error: "Error uploading image" });
-      }
-
-      imageUrlNew = uploadResult;
-    }
-  } catch (err) {
-    console.log(err);
+  if (!req.file) {
+    return res.status(400).json({ error: 'No file uploaded' });
   }
-  // const user = await createUserToDatabase(userData);
 
-  // if (user) {
-  //   res.status(200).send({
-  //     message: "User created successfully!",
-  //   });
-  // } else {
-  //   res.status(404).send({
-  //     message: "Opps! Something went wrong!",
-  //   });
-  // }
-}
+  try {
+    const uploadResponse = cloudinary.uploader.upload_stream(
+      { resource_type: "auto" },
+      async (error: any, result: any) => {
+        if (error) {
+          console.error("Error uploading to Cloudinary:", error);
+          return res.status(500).json({ error: 'Error uploading image' });
+        } else {
+          const imageUrl = result.secure_url;
+          userData.imageUrl = imageUrl;
+
+          const user = await createUserToDatabase(userData);
+
+          if (user) {
+            res.status(200).send({
+              message: "User created successfully!",
+            });
+          } else {
+            res.status(404).send({
+              message: "Oops! Something went wrong!",
+            });
+          }
+        }
+      }
+    ).end(req.file.buffer);
+
+  } catch (error) {
+    console.error("Error uploading to Cloudinary:", error);
+    res.status(500).json({ error: 'Error uploading image' });
+  }
+};
+
 
 export const loginUser = async (
   req: Request,
