@@ -79,6 +79,7 @@ export const loginUser = async (
         name: user.name,
         email: user.email,
         role: user.role,
+        imageUrl: user.imageUrl
       },
     });
   } catch (error) {
