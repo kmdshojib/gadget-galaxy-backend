@@ -1,27 +1,29 @@
 import { NextFunction, Request, Response } from "express";
 import { addProductToDB, getProductByIdFromDb, getProductFromDB } from "./product.service";
 import { v2 as cloudinary } from 'cloudinary';
+import { uploadImage } from "../../function/imageUplopad";
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
     const data = await req.body;
-    // const product = await addProductToDB(data)
+
     if (!req.files) {
         return res.status(400).json({ error: 'No file uploaded' });
     }
-    const image1 = req.files[0].buffer
-    const image2 = req.files[1].buffer
-    
+    const image1 = await uploadImage(req.files[0].buffer)
+    const image2 = await uploadImage(req.files[1].buffer)
 
-
-    // if (product) {
-    //     res.status(200).json({
-    //         message: "Product added successfully"
-    //     })
-    // } else {
-    //     res.status(404).json({
-    //         message: "opps! Something went wrong! Please check your data!"
-    //     })
-    // }
+    const imageUrls: string[] = [image1, image2]
+    data.images = imageUrls
+    const product = await addProductToDB(data)
+    if (product) {
+        res.status(200).json({
+            message: "Product added successfully"
+        })
+    } else {
+        res.status(404).json({
+            message: "opps! Something went wrong! Please check your data!"
+        })
+    }
 }
 
 export const getProducts = async (req: Request, res: Response) => {
