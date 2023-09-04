@@ -3,7 +3,8 @@ import { createUserToDatabase } from "./userService";
 import { userModel } from "./userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { UploadApiResponse, v2 as cloudinary } from 'cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
+import { uploadImage } from '../../function/imageUplopad';
 
 export const createUser = async (
   req: Request,
@@ -17,30 +18,18 @@ export const createUser = async (
   }
 
   try {
-    const uploadResponse = cloudinary.uploader.upload_stream(
-      { resource_type: "auto" },
-      async (error: any, result: any) => {
-        if (error) {
-          console.error("Error uploading to Cloudinary:", error);
-          return res.status(500).json({ error: 'Error uploading image' });
-        } else {
-          const imageUrl = result.secure_url;
-          userData.imageUrl = imageUrl;
-
-          const user = await createUserToDatabase(userData);
-
-          if (user) {
-            res.status(200).send({
-              message: "User created successfully!",
-            });
-          } else {
-            res.status(404).send({
-              message: "Oops! Something went wrong!",
-            });
-          }
-        }
-      }
-    ).end(req.file.buffer);
+    const imageUrl = await uploadImage(req.file.buffer)
+    userData.imageUrl = imageUrl;
+    const user = await createUserToDatabase(userData);
+    if (user) {
+      res.status(200).send({
+        message: "User created successfully!",
+      });
+    } else {
+      res.status(404).send({
+        message: "Oops! Something went wrong!",
+      });
+    }
 
   } catch (error) {
     console.error("Error uploading to Cloudinary:", error);
