@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import laptopRoute from './app/modules/product/product.route';
 import userRoute from './app/modules/users/userRoute';
 import { v2 as cloudinary } from 'cloudinary';
+import multer from 'multer';
 
 const app = express();
 
@@ -26,5 +27,6 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+export const storage = multer.memoryStorage();
 
 export default app;
