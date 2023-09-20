@@ -4,6 +4,7 @@ export interface laptopInterface {
     laptopName: string;
     category: string;
     price: number;
+    quantity: number;
     sellerEmail: string;
     images: string[],
 }
@@ -13,6 +14,7 @@ const laptopSchema = new Schema<laptopInterface>({
     category: { type: String, required: true },
     sellerEmail: { type: String, required: true },
     price: { type: Number, required: true },
+    quantity: { type: Number, required: true },
     images: { type: [], required: true }
 })
 
