@@ -9,7 +9,5 @@ const uplaod = multer({ storage: storage })
 
 laptopRoute.get("/get", getProducts);
 laptopRoute.get("/getProductById/:id", getProductById);
-
 laptopRoute.post("/add", uplaod.array("image", 2), createProduct);
-
 export default laptopRoute;

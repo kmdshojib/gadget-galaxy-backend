@@ -5,6 +5,7 @@ import laptopRoute from './app/modules/product/product.route';
 import userRoute from './app/modules/users/userRoute';
 import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
+import categoriesRoute from './app/modules/product-categories/categoriesRoute';
 
 const app = express();
 
@@ -18,7 +19,7 @@ dotenv.config();
 
 app.use("/api/v1/laptop", laptopRoute);
 app.use("/api/v1/user", userRoute);
-
+app.use("api/v1", categoriesRoute);
 
 
 cloudinary.config({
