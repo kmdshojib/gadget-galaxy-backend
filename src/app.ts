@@ -19,7 +19,7 @@ dotenv.config();
 
 app.use("/api/v1/laptop", laptopRoute);
 app.use("/api/v1/user", userRoute);
-app.use("api/v1", categoriesRoute);
+app.use("/api/v1", categoriesRoute);
 
 
 cloudinary.config({

@@ -3,7 +3,7 @@ import { CategoriesModel } from "./categoriesModel";
 
 const categoriesRoute: any = Router();
 
-categoriesRoute.get("/categories", async (req: Request, res: Response) => {
+const categories = async (req: Request, res: Response) => {
     try {
         const categories = await CategoriesModel.find();
         res.status(200).json({ categories });
@@ -11,6 +11,8 @@ categoriesRoute.get("/categories", async (req: Request, res: Response) => {
         console.error("Error fetching categories:", error);
         res.status(500).json({ error: "Internal server error" });
     }
-});
+}
+
+categoriesRoute.get("/categories", categories);
 
 export default categoriesRoute;
