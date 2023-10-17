@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { addProductToDB, getProductByIdFromDb, getProductFromDB } from "./product.service";
+import { addProductToDB, getProductByCategoryfromDB, getProductByIdFromDb, getProductFromDB } from "./product.service";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadImage } from "../../function/imageUplopad";
 
@@ -38,5 +38,12 @@ export const getProductById = async (req: Request, res: Response) => {
     const product = await getProductByIdFromDb(id)
     res.status(200).json({
         product
+    })
+}
+export const getProductByCategory = async (req: Request, res: Response) => {
+    const category = req.params.category
+    const products = await getProductByCategoryfromDB(category); 
+    res.status(200).json({
+        products
     })
 }

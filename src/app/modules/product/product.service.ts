@@ -16,3 +16,9 @@ export const getProductByIdFromDb = async (_id: string): Promise<laptopInterface
     const product = await laptop.findOne({ _id })
     return product;
 }
+
+export const getProductByCategoryfromDB = async (category: string) => {
+    console.log(category)
+    const products = await laptop.find({ category: category }).exec();
+    return products;
+}
