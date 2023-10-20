@@ -1,3 +1,4 @@
+import { Model } from "mongoose"
 import { laptop, laptopInterface } from "./product.model"
 
 
@@ -18,7 +19,17 @@ export const getProductByIdFromDb = async (_id: string): Promise<laptopInterface
 }
 
 export const getProductByCategoryfromDB = async (category: string) => {
-    console.log(category)
     const products = await laptop.find({ category: category }).exec();
     return products;
 }
+
+export const getSearchformDB = async (query: string, laptopModel: Model<laptopInterface>) => {
+    try {
+        const search = await laptopModel.find({ $text: { $search: query } });
+        return search;
+    } catch (error) {
+        console.error('Error searching:', error);
+        throw error;
+    }
+}
+

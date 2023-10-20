@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { addProductToDB, getProductByCategoryfromDB, getProductByIdFromDb, getProductFromDB } from "./product.service";
+import { addProductToDB, getProductByCategoryfromDB, getProductByIdFromDb, getProductFromDB, getSearchformDB } from "./product.service";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadImage } from "../../function/imageUplopad";
+import { laptop } from "./product.model";
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
     const data = await req.body;
@@ -42,8 +43,15 @@ export const getProductById = async (req: Request, res: Response) => {
 }
 export const getProductByCategory = async (req: Request, res: Response) => {
     const category = req.params.category
-    const products = await getProductByCategoryfromDB(category); 
+    const products = await getProductByCategoryfromDB(category);
     res.status(200).json({
         products
     })
+}
+// search end point
+
+export const getSearch = async (req: Request, res: Response) => {
+    const query: any = req.query.q;
+    const searchItem = await getSearchformDB(query, laptop);
+    res.status(200).json({ searchItem });
 }

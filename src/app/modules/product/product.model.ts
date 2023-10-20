@@ -17,5 +17,7 @@ const laptopSchema = new Schema<laptopInterface>({
     quantity: { type: Number, required: true },
     images: { type: [], required: true }
 })
-
-export const laptop = model("laptop", laptopSchema)
+laptopSchema.index({ laptopName: "text" })
+const laptop = model("laptop", laptopSchema)
+laptop.ensureIndexes();
+export { laptop }
