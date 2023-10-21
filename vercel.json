@@ -4,13 +4,17 @@
         {
             "src": "dist/app/server.js",
             "use": "@vercel/node",
-            "config": { "includeFiles": ["dist/app/**"] }
+            "config": {
+                "includeFiles": [
+                    "dist/app/**"
+                ]
+            }
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "dist/app/server.js"
+            "dest": "dist/app/app.js"
         }
     ]
 }
