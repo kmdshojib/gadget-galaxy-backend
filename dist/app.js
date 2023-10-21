@@ -17,6 +17,9 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json({ limit: '10mb' }));
 app.use(express_1.default.urlencoded({ extended: true }));
 dotenv_1.default.config();
+app.get("/", (req, res) => {
+    res.send("Server has been initialized!");
+});
 app.use("/api/v1/laptop", product_route_1.default);
 app.use("/api/v1/user", userRoute_1.default);
 app.use("/api/v1", categoriesRoute_1.default);

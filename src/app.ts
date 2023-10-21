@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Response,Request } from 'express';
 import cors from 'cors';
 import dotenv from "dotenv"
 import laptopRoute from './app/modules/product/product.route';
@@ -16,7 +16,9 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 dotenv.config();
-
+app.get("/",(req:Request,res:Response)=>{
+    res.send("Server has been initialized!")
+})
 app.use("/api/v1/laptop", laptopRoute);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1", categoriesRoute);
