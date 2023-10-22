@@ -3,6 +3,7 @@ import { addProductToDB, getProductByCategoryfromDB, getProductByIdFromDb, getPr
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadImage } from "../../function/imageUplopad";
 import { laptop } from "./product.model";
+import { stripe } from "../../../app";
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
     const data = await req.body;
@@ -54,4 +55,20 @@ export const getSearch = async (req: Request, res: Response) => {
     const query: any = req.query.q;
     const searchItem = await getSearchformDB(query, laptop);
     res.status(200).json({ searchItem });
+}
+
+export const makePaymentRequest = async (req: Request, res: Response) => {
+    const paymentData = req.body;
+    const price = paymentData.price;
+    const paymentIntent = await stripe.paymentIntents.create({
+        currency: "usd",
+        amount: price,
+        "payment_method_types": [
+            "card"
+        ]
+    })
+    res.send({
+        message: "Payment Successful",
+        clientSecret: paymentIntent.client_secret
+    })
 }

@@ -9,10 +9,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSearch = exports.getProductByCategory = exports.getProductById = exports.getProducts = exports.createProduct = void 0;
+exports.makePaymentRequest = exports.getSearch = exports.getProductByCategory = exports.getProductById = exports.getProducts = exports.createProduct = void 0;
 const product_service_1 = require("./product.service");
 const imageUplopad_1 = require("../../function/imageUplopad");
 const product_model_1 = require("./product.model");
+const app_1 = require("../../../app");
 const createProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const data = yield req.body;
     if (!req.files) {
@@ -65,4 +66,20 @@ const getSearch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200).json({ searchItem });
 });
 exports.getSearch = getSearch;
+const makePaymentRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const paymentData = req.body;
+    const price = paymentData.price;
+    const paymentIntent = yield app_1.stripe.paymentIntents.create({
+        currency: "usd",
+        amount: price,
+        "payment_method_types": [
+            "card"
+        ]
+    });
+    res.send({
+        message: "Payment Successful",
+        clientSecret: paymentIntent.client_secret
+    });
+});
+exports.makePaymentRequest = makePaymentRequest;
 //# sourceMappingURL=product.controller.js.map

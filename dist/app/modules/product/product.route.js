@@ -13,6 +13,7 @@ laptopRoute.get("/get", product_controller_1.getProducts);
 laptopRoute.get("/getProductById/:id", product_controller_1.getProductById);
 laptopRoute.get("/getproductByCategory/:category", product_controller_1.getProductByCategory);
 laptopRoute.get("/search", product_controller_1.getSearch);
+laptopRoute.post("/payment", product_controller_1.makePaymentRequest);
 laptopRoute.post("/add", uplaod.array("image", 2), product_controller_1.createProduct);
 exports.default = laptopRoute;
 //# sourceMappingURL=product.route.js.map

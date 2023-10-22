@@ -1,22 +1,24 @@
-import express, { Response,Request } from 'express';
+import express, { Response, Request } from 'express';
 import cors from 'cors';
-import dotenv from "dotenv"
+import dotenv, { config } from "dotenv"
 import laptopRoute from './app/modules/product/product.route';
 import userRoute from './app/modules/users/userRoute';
 import { v2 as cloudinary } from 'cloudinary';
 import multer from 'multer';
 import categoriesRoute from './app/modules/product-categories/categoriesRoute';
-
+import Stripe from 'stripe';
 const app = express();
 
 app.use(cors());
+dotenv.config();
 
 app.use(express.json({ limit: '10mb' }));
-
 app.use(express.urlencoded({ extended: true }));
-
-dotenv.config();
-app.get("/",(req:Request,res:Response)=>{
+const secret = process.env.STRIPE_SECRET;
+export const stripe = new Stripe(secret || "", {
+    apiVersion: "2023-10-16",
+});
+app.get("/", (req: Request, res: Response) => {
     res.send("Server has been initialized!")
 })
 app.use("/api/v1/laptop", laptopRoute);

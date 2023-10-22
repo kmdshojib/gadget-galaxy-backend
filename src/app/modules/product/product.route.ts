@@ -1,5 +1,12 @@
 import { Router } from "express"
-import { createProduct, getProductByCategory, getProductById, getProducts, getSearch } from "./product.controller";
+import {
+    createProduct,
+    getProductByCategory,
+    getProductById,
+    getProducts,
+    getSearch,
+    makePaymentRequest
+} from "./product.controller";
 import multer from "multer";
 import { storage } from "../../../app";
 
@@ -11,5 +18,6 @@ laptopRoute.get("/get", getProducts);
 laptopRoute.get("/getProductById/:id", getProductById);
 laptopRoute.get("/getproductByCategory/:category", getProductByCategory);
 laptopRoute.get("/search", getSearch);
+laptopRoute.post("/payment", makePaymentRequest)
 laptopRoute.post("/add", uplaod.array("image", 2), createProduct);
 export default laptopRoute;
