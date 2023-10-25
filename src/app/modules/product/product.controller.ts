@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { addProductToDB, getProductByCategoryfromDB, getProductByIdFromDb, getProductFromDB, getSearchformDB } from "./product.service";
+import { addOrderData, addProductToDB, getOrdersFromDB, getProductByCategoryfromDB, getProductByIdFromDb, getProductFromDB, getSearchformDB } from "./product.service";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadImage } from "../../function/imageUplopad";
-import { laptop } from "./product.model";
+import { OrderInterface, laptop } from "./product.model";
 import { stripe } from "../../../app";
 
 export const createProduct = async (req: Request, res: Response, next: NextFunction) => {
@@ -57,18 +57,45 @@ export const getSearch = async (req: Request, res: Response) => {
     res.status(200).json({ searchItem });
 }
 
+
 export const makePaymentRequest = async (req: Request, res: Response) => {
+
     const paymentData = req.body;
-    const price = paymentData.price;
+    const price = paymentData.price * 100;
+
     const paymentIntent = await stripe.paymentIntents.create({
         currency: "usd",
         amount: price,
-        "payment_method_types": [
-            "card"
-        ]
-    })
-    res.send({
-        message: "Payment Successful",
-        clientSecret: paymentIntent.client_secret
-    })
+        automatic_payment_methods: {
+            enabled: true,
+        }
+    });
+
+
+    res.status(200).json({
+        clientSecret: paymentIntent.client_secret,
+    });
+};
+export const makePostOrderRequest = async (req: Request, res: Response) => {
+    try {
+        const data: OrderInterface = req.body;
+        const orders = await addOrderData(data);
+        res.status(201).json(orders);
+    } catch (error) {
+        console.error('Error creating order:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
+
+// 
+export const getOrders = async (req: Request, res: Response) => {
+    try {
+        const email = req.params.email
+        const product = await getOrdersFromDB(email);
+        res.status(200).send(product)
+    } catch (error) {
+        if (error) {
+            throw new Error("Can't get orders");
+        }
+    }
 }

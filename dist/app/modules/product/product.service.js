@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSearchformDB = exports.getProductByCategoryfromDB = exports.getProductByIdFromDb = exports.getProductFromDB = exports.addProductToDB = void 0;
+exports.getOrdersFromDB = exports.addOrderData = exports.getSearchformDB = exports.getProductByCategoryfromDB = exports.getProductByIdFromDb = exports.getProductFromDB = exports.addProductToDB = void 0;
 const product_model_1 = require("./product.model");
 const addProductToDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const addProduct = new product_model_1.laptop(payload);
@@ -43,4 +43,44 @@ const getSearchformDB = (query, laptopModel) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.getSearchformDB = getSearchformDB;
+const addOrderData = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const orderedProduct = new product_model_1.order(payload);
+    for (const product of payload.product) {
+        const { id, quantity } = product;
+        const data = yield product_model_1.laptop.findOne({ _id: id });
+        if (data) {
+            data.quantity -= quantity;
+            yield data.save();
+        }
+        else {
+            console.error(`Laptop with ID ${id} not found.`);
+        }
+    }
+    yield orderedProduct.save();
+    return orderedProduct;
+});
+exports.addOrderData = addOrderData;
+const getOrdersFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const product = yield product_model_1.order.find({ customerEmail: payload });
+        let laptops = [];
+        for (const order of product) {
+            for (const item of order.product) {
+                const laptop = yield (0, exports.getProductByIdFromDb)(item.id);
+                if (laptop) {
+                    laptops.push(laptop);
+                }
+            }
+        }
+        return {
+            order: product,
+            product: laptops
+        };
+    }
+    catch (error) {
+        console.error("Error fetching orders:", error);
+        throw new Error("Something went wrong");
+    }
+});
+exports.getOrdersFromDB = getOrdersFromDB;
 //# sourceMappingURL=product.service.js.map

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.makePaymentRequest = exports.getSearch = exports.getProductByCategory = exports.getProductById = exports.getProducts = exports.createProduct = void 0;
+exports.getOrders = exports.makePostOrderRequest = exports.makePaymentRequest = exports.getSearch = exports.getProductByCategory = exports.getProductById = exports.getProducts = exports.createProduct = void 0;
 const product_service_1 = require("./product.service");
 const imageUplopad_1 = require("../../function/imageUplopad");
 const product_model_1 = require("./product.model");
@@ -68,18 +68,43 @@ const getSearch = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.getSearch = getSearch;
 const makePaymentRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const paymentData = req.body;
-    const price = paymentData.price;
+    const price = paymentData.price * 100;
     const paymentIntent = yield app_1.stripe.paymentIntents.create({
         currency: "usd",
         amount: price,
-        "payment_method_types": [
-            "card"
-        ]
+        automatic_payment_methods: {
+            enabled: true,
+        }
     });
-    res.send({
-        message: "Payment Successful",
-        clientSecret: paymentIntent.client_secret
+    res.status(200).json({
+        clientSecret: paymentIntent.client_secret,
     });
 });
 exports.makePaymentRequest = makePaymentRequest;
+const makePostOrderRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const data = req.body;
+        const orders = yield (0, product_service_1.addOrderData)(data);
+        res.status(201).json(orders);
+    }
+    catch (error) {
+        console.error('Error creating order:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+exports.makePostOrderRequest = makePostOrderRequest;
+// 
+const getOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const email = req.params.email;
+        const product = yield (0, product_service_1.getOrdersFromDB)(email);
+        res.status(200).send(product);
+    }
+    catch (error) {
+        if (error) {
+            throw new Error("Can't get orders");
+        }
+    }
+});
+exports.getOrders = getOrders;
 //# sourceMappingURL=product.controller.js.map

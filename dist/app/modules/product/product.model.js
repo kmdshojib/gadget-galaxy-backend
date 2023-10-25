@@ -1,7 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.laptop = void 0;
+exports.order = exports.laptop = void 0;
 const mongoose_1 = require("mongoose");
+const orderSchema = new mongoose_1.Schema({
+    customerEmail: { type: String, required: true },
+    price: { type: Number, required: true },
+    product: [
+        {
+            id: { type: String, required: true },
+            quantity: { type: Number, required: true }
+        }
+    ]
+});
 const laptopSchema = new mongoose_1.Schema({
     laptopName: { type: String, required: true },
     category: { type: String, required: true },
@@ -13,5 +23,7 @@ const laptopSchema = new mongoose_1.Schema({
 laptopSchema.index({ laptopName: "text" });
 const laptop = (0, mongoose_1.model)("laptop", laptopSchema);
 exports.laptop = laptop;
+const order = (0, mongoose_1.model)("order", orderSchema);
+exports.order = order;
 laptop.ensureIndexes();
 //# sourceMappingURL=product.model.js.map
