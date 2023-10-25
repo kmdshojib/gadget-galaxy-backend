@@ -20,7 +20,7 @@ const laptopSchema = new mongoose_1.Schema({
     quantity: { type: Number, required: true },
     images: { type: [], required: true }
 });
-laptopSchema.index({ laptopName: "text" });
+laptopSchema.index({ laptopName: "text" }, { background: true });
 const laptop = (0, mongoose_1.model)("laptop", laptopSchema);
 exports.laptop = laptop;
 const order = (0, mongoose_1.model)("order", orderSchema);
