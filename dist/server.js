@@ -15,7 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const app_1 = __importDefault(require("./app"));
 const port = process.env.PORT || 5000;
-const mongoDBUrl = "mongodb://127.0.0.1:27017/laptop";
+let mongoDBUrl;
+if (process.env.NODE_ENV === 'production') {
+    mongoDBUrl = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.ygyoxnw.mongodb.net/`;
+}
+else {
+    mongoDBUrl = "mongodb://127.0.0.1:27017/laptop";
+}
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(mongoDBUrl);

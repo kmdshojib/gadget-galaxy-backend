@@ -5,7 +5,12 @@ import app from './app';
 const port: any = process.env.PORT || 5000;
 
 
-const mongoDBUrl: string = "mongodb://127.0.0.1:27017/laptop"
+let mongoDBUrl: any
+if (process.env.NODE_ENV === 'production') {
+    mongoDBUrl = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.ygyoxnw.mongodb.net/`
+} else {
+    mongoDBUrl = "mongodb://127.0.0.1:27017/laptop"
+}
 const main = async () => {
     try {
         await mongoose.connect(mongoDBUrl);

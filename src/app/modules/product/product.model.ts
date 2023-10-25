@@ -36,8 +36,11 @@ const laptopSchema = new Schema<laptopInterface>({
     quantity: { type: Number, required: true },
     images: { type: [], required: true }
 })
-laptopSchema.index({ laptopName: "text" }, { background: true })
+laptopSchema.index({ laptopName: "text" }, { background: true });
+
 const laptop = model("laptop", laptopSchema)
 const order = model("order", orderSchema);
+
 laptop.ensureIndexes();
+
 export { laptop, order }
