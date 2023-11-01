@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOrders = exports.makePostOrderRequest = exports.makePaymentRequest = exports.getSearch = exports.getProductByCategory = exports.getProductById = exports.getProducts = exports.createProduct = void 0;
+exports.deleteProduct = exports.getSellerProducts = exports.getOrders = exports.makePostOrderRequest = exports.makePaymentRequest = exports.getSearch = exports.getProductByCategory = exports.getProductById = exports.getProducts = exports.createProduct = void 0;
 const product_service_1 = require("./product.service");
 const imageUplopad_1 = require("../../function/imageUplopad");
 const product_model_1 = require("./product.model");
@@ -81,6 +81,7 @@ const makePaymentRequest = (req, res) => __awaiter(void 0, void 0, void 0, funct
     });
 });
 exports.makePaymentRequest = makePaymentRequest;
+// add jwt letter
 const makePostOrderRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = req.body;
@@ -93,7 +94,7 @@ const makePostOrderRequest = (req, res) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.makePostOrderRequest = makePostOrderRequest;
-// 
+// add jwt token
 const getOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const email = req.params.email;
@@ -107,4 +108,31 @@ const getOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getOrders = getOrders;
+// add jwt letter
+const getSellerProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const sellerEmail = req.params.email;
+        const product = yield (0, product_service_1.getSellerProductsFromDb)(sellerEmail);
+        res.status(200).json(product);
+    }
+    catch (error) {
+        throw new Error("Can't get produts");
+    }
+});
+exports.getSellerProducts = getSellerProducts;
+const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        const product = yield (0, product_service_1.deleteProductFromDB)(id);
+        if (product) {
+            res.status(200).json({ message: "Product deleted successfully" });
+        }
+    }
+    catch (error) {
+        if (error) {
+            res.status(500).json({ message: "Error deleting product" });
+        }
+    }
+});
+exports.deleteProduct = deleteProduct;
 //# sourceMappingURL=product.controller.js.map

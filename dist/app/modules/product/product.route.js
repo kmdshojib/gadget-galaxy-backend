@@ -16,6 +16,8 @@ laptopRoute.get("/search", product_controller_1.getSearch);
 laptopRoute.post("/payment", product_controller_1.makePaymentRequest);
 laptopRoute.post("/postorders", product_controller_1.makePostOrderRequest);
 laptopRoute.get("/orders/:email", product_controller_1.getOrders);
+laptopRoute.get("/seller_products/:email", product_controller_1.getSellerProducts);
+laptopRoute.delete("/delete/:id", product_controller_1.deleteProduct);
 laptopRoute.post("/add", uplaod.array("image", 2), product_controller_1.createProduct);
 exports.default = laptopRoute;
 //# sourceMappingURL=product.route.js.map

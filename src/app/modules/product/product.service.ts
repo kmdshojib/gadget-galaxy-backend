@@ -75,3 +75,23 @@ export const getOrdersFromDB = async (payload: string) => {
         throw new Error("Something went wrong");
     }
 }
+
+export const getSellerProductsFromDb = async (payload: string) => {
+    try {
+        const product = laptop.find({ sellerEmail: payload });
+        return product
+    } catch (err) {
+        console.log("something went wrong", err)
+    }
+}
+
+export const deleteProductFromDB = async (id: string) => {
+    try {
+        const product = laptop.deleteOne({ _id: id });
+        return product
+    } catch (error) {
+        if (error) {
+            throw new Error("Can't delete product")
+        }
+    }
+}

@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getOrdersFromDB = exports.addOrderData = exports.getSearchformDB = exports.getProductByCategoryfromDB = exports.getProductByIdFromDb = exports.getProductFromDB = exports.addProductToDB = void 0;
+exports.deleteProductFromDB = exports.getSellerProductsFromDb = exports.getOrdersFromDB = exports.addOrderData = exports.getSearchformDB = exports.getProductByCategoryfromDB = exports.getProductByIdFromDb = exports.getProductFromDB = exports.addProductToDB = void 0;
 const product_model_1 = require("./product.model");
 const addProductToDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const addProduct = new product_model_1.laptop(payload);
@@ -83,4 +83,26 @@ const getOrdersFromDB = (payload) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getOrdersFromDB = getOrdersFromDB;
+const getSellerProductsFromDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const product = product_model_1.laptop.find({ sellerEmail: payload });
+        return product;
+    }
+    catch (err) {
+        console.log("something went wrong", err);
+    }
+});
+exports.getSellerProductsFromDb = getSellerProductsFromDb;
+const deleteProductFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const product = product_model_1.laptop.deleteOne({ _id: id });
+        return product;
+    }
+    catch (error) {
+        if (error) {
+            throw new Error("Can't delete product");
+        }
+    }
+});
+exports.deleteProductFromDB = deleteProductFromDB;
 //# sourceMappingURL=product.service.js.map

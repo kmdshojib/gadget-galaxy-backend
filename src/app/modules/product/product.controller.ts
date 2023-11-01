@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { addOrderData, addProductToDB, getOrdersFromDB, getProductByCategoryfromDB, getProductByIdFromDb, getProductFromDB, getSearchformDB } from "./product.service";
+import { addOrderData, addProductToDB, deleteProductFromDB, getOrdersFromDB, getProductByCategoryfromDB, getProductByIdFromDb, getProductFromDB, getSearchformDB, getSellerProductsFromDb } from "./product.service";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadImage } from "../../function/imageUplopad";
 import { OrderInterface, laptop } from "./product.model";
@@ -76,6 +76,7 @@ export const makePaymentRequest = async (req: Request, res: Response) => {
         clientSecret: paymentIntent.client_secret,
     });
 };
+// add jwt letter
 export const makePostOrderRequest = async (req: Request, res: Response) => {
     try {
         const data: OrderInterface = req.body;
@@ -87,7 +88,7 @@ export const makePostOrderRequest = async (req: Request, res: Response) => {
     }
 }
 
-// 
+// add jwt token
 export const getOrders = async (req: Request, res: Response) => {
     try {
         const email = req.params.email
@@ -96,6 +97,30 @@ export const getOrders = async (req: Request, res: Response) => {
     } catch (error) {
         if (error) {
             throw new Error("Can't get orders");
+        }
+    }
+}
+// add jwt letter
+export const getSellerProducts = async (req: Request, res: Response) => {
+    try {
+        const sellerEmail = req.params.email
+        const product = await getSellerProductsFromDb(sellerEmail)
+        res.status(200).json(product)
+    } catch (error) {
+        throw new Error("Can't get produts");
+    }
+}
+
+export const deleteProduct = async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id;
+        const product = await deleteProductFromDB(id);
+        if (product) {
+            res.status(200).json({ message: "Product deleted successfully" })
+        }
+    } catch (error) {
+        if (error) {
+            res.status(500).json({ message: "Error deleting product" })
         }
     }
 }
