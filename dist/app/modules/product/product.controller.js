@@ -37,10 +37,17 @@ const createProduct = (req, res, next) => __awaiter(void 0, void 0, void 0, func
 });
 exports.createProduct = createProduct;
 const getProducts = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const products = yield (0, product_service_1.getProductFromDB)();
-    res.status(200).json({
-        products
-    });
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    try {
+        const products = yield (0, product_service_1.getProductFromDB)(page, pageSize);
+        res.status(200).json({
+            products,
+        });
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 exports.getProducts = getProducts;
 const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -53,10 +60,23 @@ const getProductById = (req, res) => __awaiter(void 0, void 0, void 0, function*
 exports.getProductById = getProductById;
 const getProductByCategory = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const category = req.params.category;
-    const products = yield (0, product_service_1.getProductByCategoryfromDB)(category);
-    res.status(200).json({
-        products
-    });
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    try {
+        let products;
+        if (category === "all") {
+            products = yield (0, product_service_1.getProductFromDB)(page, pageSize);
+        }
+        else {
+            products = yield (0, product_service_1.getProductByCategoryfromDB)(category, page, pageSize);
+        }
+        res.status(200).json({
+            products
+        });
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 });
 exports.getProductByCategory = getProductByCategory;
 // search end point
@@ -124,8 +144,9 @@ const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const id = req.params.id;
         const product = yield (0, product_service_1.deleteProductFromDB)(id);
-        if (product) {
-            res.status(200).json({ message: "Product deleted successfully" });
+        console.log(product);
+        if ((product === null || product === void 0 ? void 0 : product.acknowledged) === true) {
+            res.status(200).json({ data: { message: "Product deleted successfully" } });
         }
     }
     catch (error) {

@@ -17,8 +17,9 @@ const addProductToDB = (payload) => __awaiter(void 0, void 0, void 0, function* 
     return addProduct;
 });
 exports.addProductToDB = addProductToDB;
-const getProductFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const products = product_model_1.laptop.find();
+const getProductFromDB = (page, pageSize) => __awaiter(void 0, void 0, void 0, function* () {
+    const skip = (page - 1) * pageSize;
+    const products = yield product_model_1.laptop.find().skip(skip).limit(pageSize);
     return products;
 });
 exports.getProductFromDB = getProductFromDB;
@@ -27,8 +28,9 @@ const getProductByIdFromDb = (_id) => __awaiter(void 0, void 0, void 0, function
     return product;
 });
 exports.getProductByIdFromDb = getProductByIdFromDb;
-const getProductByCategoryfromDB = (category) => __awaiter(void 0, void 0, void 0, function* () {
-    const products = yield product_model_1.laptop.find({ category: category }).exec();
+const getProductByCategoryfromDB = (category, page, pageSize) => __awaiter(void 0, void 0, void 0, function* () {
+    const skip = (page - 1) * pageSize;
+    const products = yield product_model_1.laptop.find({ category: category }).skip(skip).limit(pageSize).exec();
     return products;
 });
 exports.getProductByCategoryfromDB = getProductByCategoryfromDB;

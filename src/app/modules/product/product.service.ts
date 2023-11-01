@@ -8,8 +8,9 @@ export const addProductToDB = async (payload: laptopInterface): Promise<laptopIn
     return addProduct
 }
 
-export const getProductFromDB = async (): Promise<laptopInterface[]> => {
-    const products = laptop.find()
+export const getProductFromDB = async (page: number, pageSize: number): Promise<laptopInterface[]> => {
+    const skip = (page - 1) * pageSize;
+    const products = await laptop.find().skip(skip).limit(pageSize);
     return products;
 }
 
@@ -18,8 +19,9 @@ export const getProductByIdFromDb = async (_id: string): Promise<laptopInterface
     return product;
 }
 
-export const getProductByCategoryfromDB = async (category: string) => {
-    const products = await laptop.find({ category: category }).exec();
+export const getProductByCategoryfromDB = async (category: string, page: number, pageSize: number): Promise<laptopInterface[]> => {
+    const skip = (page - 1) * pageSize;
+    const products = await laptop.find({ category: category }).skip(skip).limit(pageSize).exec();
     return products;
 }
 

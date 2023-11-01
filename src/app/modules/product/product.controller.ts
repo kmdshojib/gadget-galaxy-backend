@@ -29,10 +29,18 @@ export const createProduct = async (req: Request, res: Response, next: NextFunct
 }
 
 export const getProducts = async (req: Request, res: Response) => {
-    const products = await getProductFromDB()
-    res.status(200).json({
-        products
-    })
+    const page = parseInt(req.query.page as string) || 1;
+    const pageSize = parseInt(req.query.pageSize as string) || 10;
+
+    try {
+        const products = await getProductFromDB(page, pageSize);
+
+        res.status(200).json({
+            products,
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 
 export const getProductById = async (req: Request, res: Response) => {
@@ -43,11 +51,25 @@ export const getProductById = async (req: Request, res: Response) => {
     })
 }
 export const getProductByCategory = async (req: Request, res: Response) => {
-    const category = req.params.category
-    const products = await getProductByCategoryfromDB(category);
-    res.status(200).json({
-        products
-    })
+    const category = req.params.category;
+    const page = parseInt(req.query.page as string) || 1;
+    const pageSize = parseInt(req.query.pageSize as string) || 10;
+
+    try {
+        let products:any;
+
+        if (category === "all") {
+            products = await getProductFromDB(page, pageSize);
+        } else {
+            products = await getProductByCategoryfromDB(category, page, pageSize);
+        }
+
+        res.status(200).json({
+            products
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 }
 // search end point
 
@@ -115,8 +137,9 @@ export const deleteProduct = async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
         const product = await deleteProductFromDB(id);
-        if (product) {
-            res.status(200).json({ message: "Product deleted successfully" })
+        console.log(product)
+        if (product?.acknowledged === true) {
+            res.status(200).json({ data: { message: "Product deleted successfully" } })
         }
     } catch (error) {
         if (error) {
