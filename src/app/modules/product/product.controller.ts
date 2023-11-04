@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { addOrderData, addProductToDB, deleteProductFromDB, getOrdersFromDB, getProductByCategoryfromDB, getProductByIdFromDb, getProductFromDB, getSearchformDB, getSellerProductsFromDb } from "./product.service";
+import { addOrderData, addProductToDB, deleteProductFromDB, getFeatuuredProductFromDb, getOrdersFromDB, getProductByCategoryfromDB, getProductByIdFromDb, getProductFromDB, getSearchformDB, getSellerProductsFromDb } from "./product.service";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadImage } from "../../function/imageUplopad";
 import { OrderInterface, laptop } from "./product.model";
@@ -56,7 +56,7 @@ export const getProductByCategory = async (req: Request, res: Response) => {
     const pageSize = parseInt(req.query.pageSize as string) || 10;
 
     try {
-        let products:any;
+        let products: any;
 
         if (category === "all") {
             products = await getProductFromDB(page, pageSize);
@@ -132,7 +132,7 @@ export const getSellerProducts = async (req: Request, res: Response) => {
         throw new Error("Can't get produts");
     }
 }
-
+// add jwt
 export const deleteProduct = async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
@@ -145,5 +145,14 @@ export const deleteProduct = async (req: Request, res: Response) => {
         if (error) {
             res.status(500).json({ message: "Error deleting product" })
         }
+    }
+}
+
+export const getFeaturedProduct = async (req: Request, res: Response) => {
+    try {
+        const product = await getFeatuuredProductFromDb()
+        res.status(200).json({ product })
+    } catch (error) {
+        throw error;
     }
 }

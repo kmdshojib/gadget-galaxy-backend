@@ -6,7 +6,9 @@ export interface laptopInterface {
     price: number;
     quantity: number;
     sellerEmail: string;
-    images: string[],
+    featured?:boolean;
+    discountedPrice?:number;
+    images: string[]
 }
 interface Product {
     id: string;
@@ -34,6 +36,8 @@ const laptopSchema = new Schema<laptopInterface>({
     sellerEmail: { type: String, required: true },
     price: { type: Number, required: true },
     quantity: { type: Number, required: true },
+    discountedPrice: { type: String},
+    featured:{ type: Boolean},
     images: { type: [], required: true }
 })
 laptopSchema.index({ laptopName: "text" }, { background: true });

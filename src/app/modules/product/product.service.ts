@@ -35,6 +35,16 @@ export const getSearchformDB = async (query: string, laptopModel: Model<laptopIn
     }
 }
 
+export const getFeatuuredProductFromDb = async (): Promise<laptopInterface[]> => {
+    try {
+        const result = await laptop.find({ featured: true })
+            .sort({ createdAt: -1 })
+            .limit(4);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
 
 export const addOrderData = async (payload: OrderInterface): Promise<OrderInterface> => {
     const orderedProduct = new order(payload);

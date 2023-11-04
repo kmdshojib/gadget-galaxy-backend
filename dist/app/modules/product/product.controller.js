@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProduct = exports.getSellerProducts = exports.getOrders = exports.makePostOrderRequest = exports.makePaymentRequest = exports.getSearch = exports.getProductByCategory = exports.getProductById = exports.getProducts = exports.createProduct = void 0;
+exports.getFeaturedProduct = exports.deleteProduct = exports.getSellerProducts = exports.getOrders = exports.makePostOrderRequest = exports.makePaymentRequest = exports.getSearch = exports.getProductByCategory = exports.getProductById = exports.getProducts = exports.createProduct = void 0;
 const product_service_1 = require("./product.service");
 const imageUplopad_1 = require("../../function/imageUplopad");
 const product_model_1 = require("./product.model");
@@ -140,6 +140,7 @@ const getSellerProducts = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.getSellerProducts = getSellerProducts;
+// add jwt
 const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const id = req.params.id;
@@ -156,4 +157,14 @@ const deleteProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.deleteProduct = deleteProduct;
+const getFeaturedProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const product = yield (0, product_service_1.getFeatuuredProductFromDb)();
+        res.status(200).json({ product });
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.getFeaturedProduct = getFeaturedProduct;
 //# sourceMappingURL=product.controller.js.map

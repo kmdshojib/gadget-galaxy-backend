@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProductFromDB = exports.getSellerProductsFromDb = exports.getOrdersFromDB = exports.addOrderData = exports.getSearchformDB = exports.getProductByCategoryfromDB = exports.getProductByIdFromDb = exports.getProductFromDB = exports.addProductToDB = void 0;
+exports.deleteProductFromDB = exports.getSellerProductsFromDb = exports.getOrdersFromDB = exports.addOrderData = exports.getFeatuuredProductFromDb = exports.getSearchformDB = exports.getProductByCategoryfromDB = exports.getProductByIdFromDb = exports.getProductFromDB = exports.addProductToDB = void 0;
 const product_model_1 = require("./product.model");
 const addProductToDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const addProduct = new product_model_1.laptop(payload);
@@ -45,6 +45,18 @@ const getSearchformDB = (query, laptopModel) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.getSearchformDB = getSearchformDB;
+const getFeatuuredProductFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield product_model_1.laptop.find({ featured: true })
+            .sort({ createdAt: -1 })
+            .limit(4);
+        return result;
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.getFeatuuredProductFromDb = getFeatuuredProductFromDb;
 const addOrderData = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const orderedProduct = new product_model_1.order(payload);
     for (const product of payload.product) {

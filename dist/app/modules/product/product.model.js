@@ -18,6 +18,8 @@ const laptopSchema = new mongoose_1.Schema({
     sellerEmail: { type: String, required: true },
     price: { type: Number, required: true },
     quantity: { type: Number, required: true },
+    discountedPrice: { type: String },
+    featured: { type: Boolean },
     images: { type: [], required: true }
 });
 laptopSchema.index({ laptopName: "text" }, { background: true });

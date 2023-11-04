@@ -2,6 +2,7 @@ import { Router } from "express"
 import {
     createProduct,
     deleteProduct,
+    getFeaturedProduct,
     getOrders,
     getProductByCategory,
     getProductById,
@@ -25,7 +26,8 @@ laptopRoute.get("/search", getSearch);
 laptopRoute.post("/payment", makePaymentRequest);
 laptopRoute.post("/postorders", makePostOrderRequest);
 laptopRoute.get("/orders/:email", getOrders);
-laptopRoute.get("/seller_products/:email", getSellerProducts)
-laptopRoute.delete("/delete/:id", deleteProduct)
+laptopRoute.get("/seller_products/:email", getSellerProducts);
+laptopRoute.delete("/delete/:id", deleteProduct);
+laptopRoute.get("/featured",getFeaturedProduct)
 laptopRoute.post("/add", uplaod.array("image", 2), createProduct);
 export default laptopRoute;
