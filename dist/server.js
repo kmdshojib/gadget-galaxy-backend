@@ -17,7 +17,7 @@ const app_1 = __importDefault(require("./app"));
 const port = process.env.PORT || 5000;
 let mongoDBUrl;
 if (process.env.NODE_ENV === 'production') {
-    mongoDBUrl = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.ygyoxnw.mongodb.net/`;
+    mongoDBUrl = `mongodb+srv://${process.env.ADMIN}:${process.env.PASSWORD}@cluster0.ygyoxnw.mongodb.net/gadgetGalaxy`;
 }
 else {
     mongoDBUrl = "mongodb://127.0.0.1:27017/laptop";
